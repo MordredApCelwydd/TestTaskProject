@@ -1,4 +1,9 @@
 using UnityEngine;
+
+/// <summary>
+/// Handles animation state changes based on movement, attack, and damage events.
+/// Requires components that implement IMove, IAttack, and ITakeDamage interfaces.
+/// </summary>
 public class Animated : MonoBehaviour
 {
     [SerializeField] private Animator animator;
