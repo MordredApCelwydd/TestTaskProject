@@ -1,34 +1,40 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Handles projectile logic, including its speed and lifespan. Meant to be used with an object pool, therefore
+/// the projectile won't destroyed at the end of its lifespan.
+/// </summary>
 public class Projectile : MonoBehaviour
 {
     [SerializeField] private float speed;
 
     [SerializeField] private float lifespan;
 
-    private void Start()
+    private void OnEnable()
     {
-        Destroy(gameObject, 5);
+        StartCoroutine(LifeSpanCounter());
     }
 
     private void Update()
     {
         transform.position += transform.forward * speed * Time.deltaTime;
     }
-
-    private void OnCollisionEnter(Collision other)
+    
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.gameObject == PlayerSingleton.Instance.gameObject)
+        {
+            PlayerSingleton.Instance.GetComponent<Damageable>()?.TakeDamage();
+        }
+
+        gameObject.SetActive(false);
     }
-
-    private void OnEnable()
+    
+    private IEnumerator LifeSpanCounter()
     {
-        
-    }
-
-    private void OnDisable()
-    {
-        
+        yield return new WaitForSeconds(lifespan);
+        gameObject.SetActive(false);
     }
 }

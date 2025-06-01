@@ -4,6 +4,11 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+/// <summary>
+/// Object pool for reusing MonoBehaviour instances to optimize performance.
+/// Manages a pool of objects instantiated from a prefab, optionally expandable.
+/// </summary>
+/// <typeparam name="T">Type of the pooled objects, must be a MonoBehaviour.</typeparam>
 public class ObjectPool<T> where T : MonoBehaviour
 {
     private T _prefab;
@@ -26,12 +31,20 @@ public class ObjectPool<T> where T : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Creates a new empty GameObject to act as a container for the pooled objects.
+    /// </summary>
     private void CreateContainer()
     {
         _ownContainer = new GameObject();
         _ownContainer.name = $"{_prefab.name} Pool Container";
     }
 
+    /// <summary>
+    /// Creates a new object, adds it to the pool, and optionally activates it.
+    /// </summary>
+    /// <param name="isActive">Dictates whether the object will be active at creation.</param>
+    /// <returns>The created pooled object.</returns>
     private T CreateObject( bool isActive = false)
     {
         var createdObject = Object.Instantiate(_prefab, _ownContainer.transform);
@@ -40,6 +53,11 @@ public class ObjectPool<T> where T : MonoBehaviour
         return createdObject;
     }
 
+    /// <summary>
+    /// Checks if there is a free element in the pool.
+    /// </summary>
+    /// <param name="element">Outputs the available object if found, otherwise null.</param>
+    /// <returns>True if a free object was found, otherwise false.</returns>
     private bool HasFreeElement(out T element)
     {
         foreach (var obj in _pool)
@@ -55,6 +73,12 @@ public class ObjectPool<T> where T : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Gets an active object from the pool at the specified position.
+    /// If none are available and pool is expandable, creates a new object.
+    /// </summary>
+    /// <param name="position">World position to place the object.</param>
+    /// <returns>Active pooled object ready for use.</returns>
     public T GetElement(Vector3 position)
     {
         if (HasFreeElement(out var element))
