@@ -6,7 +6,7 @@ Arrow keys - movement;
 Space - killing an enemy;  
 Spawn button - spawning an enemy;  
 
-1. Player hit indication is implemented through animation; player movement and attacks are also animated, similar to enemies.
+1. Player hit indication is implemented through animation; player movement and attacks are also animated with the use of animation layers and avatar masks, similar to enemies.
 2. Character control is implemented using the New Input System and a physics-based approach.
 3. The camera system is implemented using Cinemachine.
 4. Enemy pathfinding is implemented using AI Navigation.
